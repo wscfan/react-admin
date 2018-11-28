@@ -1,88 +1,61 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
 
-class Component extends React.Component {
+class A extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: 'Old State'
-    }
-    console.log('初始化数据', 'constructor');
-  }
-  componentWillMount() {
-    console.log('ComponentWillMount');
-  }
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
-  componentWillReceiveProps() {
-    console.log('componentWillReceiveProps');
-  }
-  shouldComponentUpdate() {
-    console.log('shouldComponentUpdate');
-    return true;
-  }
-  componentWillUpdate() {
-    console.log('componentWillUpdate');
-  }
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
-  componentWillUnmount() {
-    console.log('componentWillUnmount');
-  }
-  handleClick() {
-    this.setState({
-      data: 'New State'
-    })
-    console.log('更新数据');
   }
   render() {
-    console.log('render');
     return (
       <div>
-        <div>Props: {this.props.data}</div>
-        <button onClick={() => {this.handleClick()}}>更新组件</button>
+      Component A 
+      <Switch>
+        <Route exact path={`${this.props.match.path}`} render={(route) => {
+          return <div>当前组件是不带参数的A</div>
+        }} />
+        <Route exact path={`${this.props.match.path}/sub`} render={(route) => {
+          return <div>当前组件是sub</div>
+        }} />
+        <Route path={`${this.props.match.path}/:id`} render={(route) => {
+          return <div>当前组件是带参数的A, 参数是： {route.match.params.id}</div>
+        }} />
+      </Switch>
       </div>
     )
   }
 }
-
-class App extends React.Component {
+class B extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: 'Old Props',
-      hasChild: true
-    };
-    console.log('初始化数据', 'constructor');
   }
-  onPropsChange() {
-    console.log('更新props');
-    this.setState({
-      data: 'New Props'
-    });
+  render() {
+    return <div>Component B</div>
   }
-  onDestoryChild() {
-    console.log('干掉子组件');
-    this.setState({
-      hasChild: false
-    })
+}
+class Wrapper extends React.Component {
+  constructor(props) {
+    super(props);
   }
   render() {
     return (
       <div>
-        {
-          this.state.hasChild ? <Component data={this.state.data} /> : null
-        }
-        <button onClick={() => {this.onPropsChange()}}>改变Props</button>
-        <button onClick={() => {this.onDestoryChild()}}>干掉子组件</button>
+        <Link to="/a">组件A</Link><br />
+        <Link to="/a/123">带参数的组件A</Link><br />
+        <Link to="/b">组件B</Link><br />
+        <Link to="/a/sub">/a/sub</Link>
+        {this.props.children}
       </div>
     )
   }
 }
 
 ReactDOM.render(
-  <App />,
+  <Router>
+    <Wrapper>
+      <Route path="/a" component={A} />
+      <Route path="/b" component={B} />
+    </Wrapper>
+  </Router>,
   document.getElementById('app')
 );
