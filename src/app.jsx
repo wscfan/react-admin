@@ -1,83 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router, Route, Link, Switch, Redirect} from 'react-router-dom';
 
-class Component extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: 'Old State'
-    }
-    console.log('初始化数据', 'constructor');
-  }
-  componentWillMount() {
-    console.log('ComponentWillMount');
-  }
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
-  componentWillReceiveProps() {
-    console.log('componentWillReceiveProps');
-  }
-  shouldComponentUpdate() {
-    console.log('shouldComponentUpdate');
-    return true;
-  }
-  componentWillUpdate() {
-    console.log('componentWillUpdate');
-  }
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
-  componentWillUnmount() {
-    console.log('componentWillUnmount');
-  }
-  handleClick() {
-    this.setState({
-      data: 'New State'
-    })
-    console.log('更新数据');
-  }
-  render() {
-    console.log('render');
-    return (
-      <div>
-        <div>Props: {this.props.data}</div>
-        <button onClick={() => {this.handleClick()}}>更新组件</button>
-      </div>
-    )
-  }
-}
+// 页面
+import Layout from 'component/layout/index.jsx';
+import Home from 'page/home/index.jsx';
+
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: 'Old Props',
-      hasChild: true
-    };
-    console.log('初始化数据', 'constructor');
-  }
-  onPropsChange() {
-    console.log('更新props');
-    this.setState({
-      data: 'New Props'
-    });
-  }
-  onDestoryChild() {
-    console.log('干掉子组件');
-    this.setState({
-      hasChild: false
-    })
-  }
   render() {
     return (
-      <div>
-        {
-          this.state.hasChild ? <Component data={this.state.data} /> : null
-        }
-        <button onClick={() => {this.onPropsChange()}}>改变Props</button>
-        <button onClick={() => {this.onDestoryChild()}}>干掉子组件</button>
-      </div>
+        <Router>
+          <Layout>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Redirect from="*" to="/" />
+            </Switch>
+          </Layout>
+        </Router>
     )
   }
 }
